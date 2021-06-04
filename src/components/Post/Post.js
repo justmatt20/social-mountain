@@ -11,7 +11,7 @@ import Edit from './Edit/Edit';
 
 //////////////////////////////////////////////////////// THIS COMPONENT IS BEING RENDERED IN THE *APP* COMPONENT
 
-export default class Post extends Component {
+class Post extends Component {
   constructor() {
     super();
 
@@ -27,13 +27,13 @@ export default class Post extends Component {
   }
 
   // This puts the post into EDIT mode when the EDIT button is clicked from the drop-down
-  showEdit() {
+  showEdit()  {
     this.setState({ editing: true, showMasterMenu: false });
   }
 
   // This puts the post back into normal viewing mode when the CANCEL button is clicked
   // This method is passed down to the <Edit /> component via props
-  hideEdit() {
+  hideEdit(){
     this.setState({ editing: false });
   }
 
@@ -51,10 +51,9 @@ export default class Post extends Component {
 
   render() {
     // This is destructuring! You can also think of it as being written as so:
-      // const editing = this.state.editing
-      // const showMasterMenu = this.state.showMasterMenu
+
     const { editing, showMasterMenu } = this.state;
-    const {text, date, id} = this.props;
+    const { id, text, date, updatePostFn, deletePostFn } = this.props;
 
     return (
       // Main body of post
@@ -67,7 +66,7 @@ export default class Post extends Component {
           {/* Drop-down menu. Remember that the "showMasterMenu" variable has been destructured off of this.state */}
           <div className="Post__master-menu" style={ { display: showMasterMenu ? 'flex' : 'none' } }>
             <span onClick={ this.showEdit }>Edit</span>
-            <span onClick={ () => this.deletePostFn(id) }>Delete</span>
+            <span onClick={ () => deletePostFn (id)}>Delete</span>
           </div>
         </div>
 
@@ -99,7 +98,7 @@ export default class Post extends Component {
               <Edit text={text}
                     id={id}
                     hideEdit={ this.hideEdit } 
-                    updatePostFn={this.updatePostFn}/>
+                    updatePostFn = {updatePostFn}/>
             :
               <span className="Post__text">{text}</span>
           }
@@ -117,3 +116,4 @@ export default class Post extends Component {
   }
 }
 
+export default Post;

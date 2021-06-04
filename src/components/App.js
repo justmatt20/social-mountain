@@ -7,19 +7,24 @@ import Header from './Header/Header';
 import Compose from './Compose/Compose';
 import Post from './Post/Post';
 
+
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      posts: []
+      posts: [],
+      text: ''
     };
 
-    this.updatePost = this.updatePost.bind( this );
-    this.deletePost = this.deletePost.bind( this );
-    this.createPost = this.createPost.bind( this );
+    // this.updatePost = this.updatePost.bind( this );
+    // this.deletePost = this.deletePost.bind( this );
+    // this.createPost = this.createPost.bind( this );
   }
   
+  updateState = (newPosts) => {
+    this.setState({posts: newPosts})
+  }
   componentDidMount() {
     axios.get('https://practiceapi.devmountain.com/api/posts' )
     .then((results) => this.setState({posts: results.data}
@@ -27,26 +32,32 @@ class App extends Component {
     .catch((e) => console.log(e))
   }
 
-  updatePost(id, text) {
-    axios.put(`https://practiceapi.devmountain.com/api/posts?id=id&text=text`)
-    .then((results) =>{this.setState({posts: results.data})
+  updatePost = (id, text) => {
+    // const {id} = this.state
+    // const {text} = this.state
+    axios.put(`https://practiceapi.devmountain.com/api/posts?id=${id}`, {text}) 
+    .then(results => {this.setState({posts: results.data})}
+    )
+    .catch((e) => console.log(e))
+  }
   
-  })
-  .catch((e) => console.log(e))
-  }
 
-  deletePost(id) {
-    axios.delete(`https://practiceapi.devmountain.com/api/posts?id={id}`)
-    .then((results) => this.setState({posts: results.data}
-      ))
+  deletePost=(id) => {
+    axios.delete(`https://practiceapi.devmountain.com/api/posts?id=${id}`)
+    .then((response) => {
+      if (response.data!==null) {
+        this.setState({posts: this.state.posts.filter(post => post.id!==id)})
+        console.log(response)
+      }
+    })
       .catch((e) => console.log(e))
   }
 
-  createPost(text) {
-    axios.post('https://practiceapi.devmountain.com/api/posts', {text})
-    .then((results) => this.setState({posts: results.data}
-      ))
-      .catch((e) => console.log(e))
+  createPost( text ) {
+    axios.post('https://practiceapi.devmountain.com/api/posts', { text })
+    .then( results => {this.setState({ posts: results.data });
+    })
+    .catch((e) => console.log(e))
   }
 
   render() {
